@@ -13,7 +13,7 @@ Sound Effects: Basic sound effects are included for card flipping, matching, mis
 Getting Started
 To get started with the project, follow these steps:
 
-Clone the repository: git clone https://github.com/username/memory-match-game.git
+Clone the repository: git clone https://github.com/Evans-Kiplagat/Card-match-game.git
 Open the project in Unity 2021 LTS.
 Build and run the game on your desired platform.
 
