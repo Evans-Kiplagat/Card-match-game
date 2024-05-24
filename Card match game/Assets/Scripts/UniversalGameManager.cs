@@ -37,8 +37,12 @@ namespace CardMatchGame
         // Slider UI element to adjust the game size
         [SerializeField] private Slider sizeSlider;
 
-        public int score = 0;
+        public int PlayerScore = 0;
+        public int currentLevel = 2;
         public Text scoreText;
+        public Text levelText;
+
+        public Button levelButton;
 
         private int spriteSelected;
         private int cardSelected;
@@ -53,14 +57,15 @@ namespace CardMatchGame
         {
             isGameRunning = false;
             UIGamePanel.SetActive(false);
+            LoadGameData();
         }
 
         // Start a game
         public void StartGame()
         {
             // Check if the game is already running
-            if (isGameRunning)
-                return;
+            //if (isGameRunning)
+              //  return;
 
             // Set the game state to running
             isGameRunning = true;
@@ -268,8 +273,8 @@ namespace CardMatchGame
         // check if game score 
         private void ScoreUpdate()
         {
-            score += 1;
-            scoreText.text = score.ToString();
+            PlayerScore += 1;
+            scoreText.text = PlayerScore.ToString();
         }
         // check if game is completed
         private void CheckGameWin()
@@ -277,16 +282,66 @@ namespace CardMatchGame
             // win game
             if (cardLeft == 0)
             {
-                score = -1;
-                EndGame();
+                levelButton.gameObject.SetActive(true);
                 AudioPlayer.Instance.PlayAudioClip(1);
             }
         }
+
+    
+        public void NextLevelGame()
+        {
+            //isGameRunning = true;
+            currentLevel += 1;
+            gameSize = currentLevel;
+            currentLevel = gameSize;
+            levelText.text = currentLevel.ToString();   
+            StartGame();
+        }
+
+        public void SaveGameData()
+        {
+            // Save player's score
+            PlayerPrefs.SetInt("PlayerScore", PlayerScore);
+
+            // Save player's level
+            PlayerPrefs.SetInt("PlayerLevel", currentLevel);
+
+            // Optionally, you can set a flag to indicate that data has been saved
+            PlayerPrefs.SetInt("DataSaved", 1);
+        }
+
+        public void LoadGameData()
+        {
+            // Check if data has been saved
+            if (PlayerPrefs.GetInt("DataSaved", 0) == 1)
+            {
+                // Load player's score
+                PlayerScore = PlayerPrefs.GetInt("PlayerScore", 0);
+
+                // Load player's level
+                currentLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
+            }
+            else
+            {
+                // No saved data, initialize with default values
+                PlayerScore = 0;
+                currentLevel = 1;
+            }
+        }
+
+        public void ResetGameData()
+        {
+            PlayerPrefs.DeleteAll();
+        }
+
         // stop game
         public void EndGame()
         {
+            PlayerScore = -1;
+            currentLevel = 1;
             isGameRunning = false;
             UIGamePanel.SetActive(false);
+            SaveGameData();
         }
     
  
