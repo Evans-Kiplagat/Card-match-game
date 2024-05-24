@@ -28,19 +28,16 @@ namespace CardMatchGame
         //we place card on this panel
         [SerializeField]
         private GameObject UIGamePanel;
-        [SerializeField]
-        private GameObject info;
-        // for preloading
-        [SerializeField]
-        private MatchCard spritePreload;
+      
+ 
         // other UI
         [SerializeField]
         private Text sizeLabel;
         [SerializeField]
         private Slider sizeSlider;
-        [SerializeField]
-        private Text timeLabel;
-        private float time;
+   
+        public int score = 0;
+        public Text scoreText;
 
         private int spriteSelected;
         private int cardSelected;
@@ -64,7 +61,7 @@ namespace CardMatchGame
             gameStart = true;
             // toggle UI
             UIGamePanel.SetActive(true);
-            info.SetActive(false);
+        
             // set cards, size, position
             SetGamePanel();
             // renew gameplay variables
@@ -73,7 +70,7 @@ namespace CardMatchGame
             // allocate sprite to card
             SpriteCardAllocation();
             StartCoroutine(HideFace());
-            time = 0;
+
         }
 
         // Initialize cards, size, and position based on size of game
@@ -235,6 +232,8 @@ namespace CardMatchGame
                     cards[cardId].Inactive();
                     cardLeft -= 2;
                     CheckGameWin();
+
+                    ScoreUpdate();
                 }
                 else
                 {
@@ -245,12 +244,20 @@ namespace CardMatchGame
                 cardSelected = spriteSelected = -1;
             }
         }
+
+        // check if game score 
+        private void ScoreUpdate()
+        {
+            score += 1;
+            scoreText.text = score.ToString();
+        }
         // check if game is completed
         private void CheckGameWin()
         {
             // win game
             if (cardLeft == 0)
             {
+                score = -1;
                 EndGame();
                 AudioPlayer.Instance.PlayAudioClip(1);
             }
@@ -262,18 +269,6 @@ namespace CardMatchGame
             UIGamePanel.SetActive(false);
         }
     
-        public void DisplayInfo(bool i)
-        {
-            info.SetActive(i);
-        }
-        // track elasped time
-        private void Update()
-        {
-            if (gameStart)
-            {
-                time += Time.deltaTime;
-                timeLabel.text = "Time: " + time + "s";
-            }
-        }
+ 
     }
 }
