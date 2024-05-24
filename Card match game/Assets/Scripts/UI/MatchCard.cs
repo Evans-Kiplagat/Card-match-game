@@ -13,8 +13,7 @@ namespace CardMatchGame
         private bool flipped;
         private bool turning;
 
-        [SerializeField]
-        private Image img;
+        [SerializeField] private Image img;
 
         // flip card animation
         // if changeSprite specified, will 90 degree, change to back/front sprite before flipping another 90 degree

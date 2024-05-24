@@ -7,42 +7,43 @@ namespace CardMatchGame
 {
     public class UniversalGameManager : MonoBehaviour
     {
-
+        // class instance
         public static UniversalGameManager Instance;
         public static int gameSize = 2;
-        // gameobject instance
-        [SerializeField]
-        private GameObject prefab;
-        // parent object of cards
-        [SerializeField]
-        private GameObject cardList;
-        // sprite for card back
-        [SerializeField]
-        private Sprite cardBack;
-        // all possible sprite for card front
-        [SerializeField]
-        private Sprite[] sprites;
-        // list of card
+ 
+        // Prefab for instantiating card game objects
+        [SerializeField] private GameObject cardPrefab;
+
+        // Parent game object for holding all card instances
+        [SerializeField] private GameObject cardList;
+
+        // Sprite to be used as the back of the cards
+        [SerializeField] private Sprite cardBackSprite;
+
+        // Array of sprites to be used as the front faces of the cards
+        [SerializeField] private Sprite[] cardFrontSprites;
+
+        // Array to hold references to all instantiated card game objects
         private MatchCard[] cards;
 
-        //we place card on this panel
-        [SerializeField]
-        private GameObject UIGamePanel;
-      
- 
+        // Game object representing the panel where the cards will be placed
+        [SerializeField] private GameObject UIGamePanel;
+
         // other UI
-        [SerializeField]
-        private Text sizeLabel;
-        [SerializeField]
-        private Slider sizeSlider;
-   
+
+        // Text UI element to display the game size
+        [SerializeField] private Text sizeLabel;
+
+        // Slider UI element to adjust the game size
+        [SerializeField] private Slider sizeSlider;
+
         public int score = 0;
         public Text scoreText;
 
         private int spriteSelected;
         private int cardSelected;
         private int cardLeft;
-        private bool gameStart;
+        private bool isGameRunning;
 
         void Awake()
         {
@@ -50,50 +51,66 @@ namespace CardMatchGame
         }
         void Start()
         {
-            gameStart = false;
+            isGameRunning = false;
             UIGamePanel.SetActive(false);
         }
- 
+
         // Start a game
         public void StartGame()
         {
-            if (gameStart) return; // return if game already running
-            gameStart = true;
-            // toggle UI
+            // Check if the game is already running
+            if (isGameRunning)
+                return;
+
+            // Set the game state to running
+            isGameRunning = true;
+
+            // Toggle the UI panel visibility
             UIGamePanel.SetActive(true);
-        
-            // set cards, size, position
+
+            // Set up the game panel
             SetGamePanel();
-            // renew gameplay variables
+
+            // Reset gameplay variables
             cardSelected = spriteSelected = -1;
             cardLeft = cards.Length;
-            // allocate sprite to card
-            SpriteCardAllocation();
-            StartCoroutine(HideFace());
 
+            // Allocate sprites to cards
+            SpriteCardAllocation();
+
+            // Start the card face hiding coroutine
+            StartCoroutine(HideFace());
         }
 
         // Initialize cards, size, and position based on size of game
         private void SetGamePanel()
         {
-            // if game is odd, we should have 1 card less
+            // Determine if the game size is odd
             int isOdd = gameSize % 2;
 
-            cards = new MatchCard[gameSize * gameSize - isOdd];
-            // remove all gameobject from parent
+            // Calculate the number of cards needed
+            int cardCount = gameSize * gameSize - isOdd;
+            cards = new MatchCard[cardCount];
+
+            // Remove all existing cards from the parent
             foreach (Transform child in cardList.transform)
             {
                 GameObject.Destroy(child.gameObject);
             }
-            // calculate position between each card & start position of each card based on the Panel
-            RectTransform panelsize = UIGamePanel.transform.GetComponent(typeof(RectTransform)) as RectTransform;
-            float row_size = panelsize.sizeDelta.x;
-            float col_size = panelsize.sizeDelta.y;
+
+            // Get the panel size and anchor position
+            RectTransform panelTransform = UIGamePanel.transform as RectTransform;
+            Vector3 panelPosition = panelTransform.position;
+            float row_size = panelTransform.sizeDelta.x;
+            float col_size = panelTransform.sizeDelta.y;
+
+            // Calculate the scale and position offsets
             float scale = 1.0f / gameSize;
             float xInc = row_size / gameSize;
             float yInc = col_size / gameSize;
             float curX = -xInc * (float)(gameSize / 2);
             float curY = -yInc * (float)(gameSize / 2);
+
 
             if (isOdd == 0)
             {
@@ -101,15 +118,16 @@ namespace CardMatchGame
                 curY += yInc / 2;
             }
             float initialX = curX;
-            // for each in y-axis
+
+            // Iterate over rows for each in y-axis
             for (int i = 0; i < gameSize; i++)
             {
                 curX = initialX;
-                // for each in x-axis
+                // Iterate over rows for each in x-axis
                 for (int j = 0; j < gameSize; j++)
                 {
                     GameObject c;
-                    // if is the last card and game is odd, we instead move the middle card on the panel to last spot
+                    // Handle the last card position if the game size is odd
                     if (isOdd == 1 && i == (gameSize - 1) && j == (gameSize - 1))
                     {
                         int index = gameSize / 2 * gameSize + gameSize / 2;
@@ -118,7 +136,7 @@ namespace CardMatchGame
                     else
                     {
                         // create card prefab
-                        c = Instantiate(prefab);
+                        c = Instantiate(cardPrefab);
                         // assign parent
                         c.transform.parent = cardList.transform;
 
@@ -137,7 +155,9 @@ namespace CardMatchGame
             }
 
         }
+
         // reset face-down rotation of all cards
+
         void ResetFace()
         {
             for (int i = 0; i < gameSize; i++)
@@ -161,13 +181,13 @@ namespace CardMatchGame
             for (i = 0; i < cards.Length / 2; i++)
             {
                 // get a random sprite
-                int value = Random.Range(0, sprites.Length - 1);
+                int value = Random.Range(0, cardFrontSprites.Length - 1);
                 // check previous number has not been selection
                 // if the number of cards is larger than number of sprites, it will reuse some sprites
                 for (j = i; j > 0; j--)
                 {
                     if (selectedID[j - 1] == value)
-                        value = (value + 1) % sprites.Length;
+                        value = (value + 1) % cardFrontSprites.Length;
                 }
                 selectedID[i] = value;
             }
@@ -200,17 +220,17 @@ namespace CardMatchGame
         // return Sprite based on its id
         public Sprite GetSprite(int spriteId)
         {
-            return sprites[spriteId];
+            return cardFrontSprites[spriteId];
         }
         // return card back Sprite
         public Sprite CardBack()
         {
-            return cardBack;
+            return cardBackSprite;
         }
         // check if clickable
         public bool canClick()
         {
-            if (!gameStart)
+            if (!isGameRunning)
                 return false;
             return true;
         }
@@ -265,7 +285,7 @@ namespace CardMatchGame
         // stop game
         public void EndGame()
         {
-            gameStart = false;
+            isGameRunning = false;
             UIGamePanel.SetActive(false);
         }
     

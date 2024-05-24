@@ -1720,18 +1720,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 233b5fbf6fa0d4747a86a387b89c26a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2042973486501498502, guid: fb69db76d0b90af458d037e253272977, type: 3}
+  cardPrefab: {fileID: 2042973486501498502, guid: fb69db76d0b90af458d037e253272977, type: 3}
   cardList: {fileID: 71676446}
-  cardBack: {fileID: 21300000, guid: 74269208d2cfabe4aa252a5914d63e93, type: 3}
-  sprites:
+  cardBackSprite: {fileID: 21300000, guid: 74269208d2cfabe4aa252a5914d63e93, type: 3}
+  cardFrontSprites:
+  - {fileID: 21300000, guid: af5573717c75e9c49b1b09ee2fc06562, type: 3}
   - {fileID: 21300000, guid: 9d964c27f3c32d348ac44d888248bc5b, type: 3}
   - {fileID: 21300000, guid: 1d902f1c6f5ce37428334da4d0502988, type: 3}
+  - {fileID: 21300000, guid: 36d7732e48bbb08438b3b3416b380a2e, type: 3}
+  - {fileID: 21300000, guid: d45a174b576c0fa449c7926b382dbb59, type: 3}
+  - {fileID: 21300000, guid: 1049e4754e68a5f4a97bb42ef4f4f27b, type: 3}
   - {fileID: 21300000, guid: 781624d544af98f49bd71e4542d55fd2, type: 3}
   - {fileID: 21300000, guid: dea20178f5d26e643891cfa2df008dc3, type: 3}
   - {fileID: 21300000, guid: 73003965449a59a429b526c135379d17, type: 3}
   - {fileID: 21300000, guid: 9a8403a8f3db96c43931103f9ab9ece3, type: 3}
   - {fileID: 21300000, guid: 6a96b7aa90385e9418b881af753fe83e, type: 3}
-  - {fileID: 21300000, guid: 91d6c13b7f72c664b9e37a7f03a07257, type: 3}
   - {fileID: 21300000, guid: 4dc264b85da1ac646ae96f79de98b3f5, type: 3}
   - {fileID: 21300000, guid: d039ed47764e638459eff31045ac010e, type: 3}
   - {fileID: 21300000, guid: 31048c839bf414f468103dec930dba1f, type: 3}
@@ -1740,10 +1743,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 37d414dd8f1b5604fa3d2f90faacd14d, type: 3}
   - {fileID: 21300000, guid: 7d88938fd8339e84c92f98633f5c05cf, type: 3}
   - {fileID: 21300000, guid: 3b1d8311f800987419d7a3c60bb7ef99, type: 3}
+  - {fileID: 21300000, guid: ca6c6c7f481122d43b55cda504071915, type: 3}
   - {fileID: 21300000, guid: cf7549427f8491d4a9902f5af5aa96d2, type: 3}
   UIGamePanel: {fileID: 1196078171}
-  info: {fileID: 1486345959}
-  spritePreload: {fileID: 0}
   sizeLabel: {fileID: 1486345961}
   sizeSlider: {fileID: 1038966748}
   score: 0
